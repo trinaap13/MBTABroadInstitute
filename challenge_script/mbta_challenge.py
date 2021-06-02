@@ -13,8 +13,6 @@ def get_subway_routes_long_names():
         route_list = route['attributes']['long_name']
         print(route_list)
 
-print('\nQUESTION 2 PARTITION\n')
-
 def subway_route_stops_and_connections():
     """Access MBTA API to find routes with the most/least stops and that connect two or more subway routes"""
     route_stops = requests.get('https://api-v3.mbta.com/stops?filter[route_type]=0,1&include=route,parent_station')
@@ -52,21 +50,23 @@ def subway_route_stops_and_connections():
     print("Subway route with the most stops: {}".format(most_stops))
     print("Subway route with the least number of stops: {}".format(least_stops))
 
+
 def subway_route_calculator():
     """Access MBTA API to find subway routes to bes"""
     route_stops = requests.get('https://api-v3.mbta.com/stops?filter[route_type]=0,1&include=route,parent_station')
     route_stops_json_format = route_stops.json()
     route_stops_data_dict = route_stops_json_format['data']
 
-    first_stop = input("Enter your first stop: ")
+    stop_1 = input("Enter your first stop: ")
     #second_stop = input("Please enter your second stop: ")
 
     for item in route_stops_data_dict:
-        if first_stop in item['attributes']['description']:
+        if stop_1 in item['attributes']['description']:
             result = [re.search('- (.*) -', item['attributes']['description']).group(1)]
             # route_marker = "- (.*?) -"
             #possible_routes = re.search(route_marker, item['attributes']['description']).group(1)
             print([item[0] for item in result])
 
-
-k = subway_route_calculator()
+subway_routes = get_subway_routes_long_names()
+stops_and_connections = subway_route_stops_and_connections()
+make_subway_route = subway_route_calculator()
